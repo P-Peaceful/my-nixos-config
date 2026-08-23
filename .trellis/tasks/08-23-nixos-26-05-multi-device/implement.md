@@ -127,7 +127,7 @@ nix eval --raw .#nixosConfigurations.thinkbook14.config.networking.hostName
 
 回滚点：禁用 Noctalia 服务、从 GDM 进入 GNOME，或启动阶段 6 系统代。
 
-阶段记录：阶段 7 已接入官方 Noctalia v5 Home Manager 模块，仅在 Niri 会话条件满足时运行官方用户服务；settings、调色板、插件、Waybar 和 v4 配置均未加入，待 CI 验证后归档。
+阶段记录：阶段 7 已接入官方 Noctalia v5 Home Manager 模块，仅在 Niri 会话条件满足时运行官方用户服务；settings、调色板、插件、Waybar 和 v4 配置均未加入。提交 `eadc352` 的 [NixOS Flake Check #4](https://github.com/P-Peaceful/my-nixos-config/actions/runs/32665117984) 已成功，Noctalia 主机闭包构建由后续最新提交工作流继续验证；按用户指令阶段 7 已直接归档，现场验收延期。
 
 ## 阶段 8：文档与多设备扩展验收
 
@@ -144,7 +144,7 @@ nix eval --raw .#nixosConfigurations.thinkbook14.config.networking.hostName
 
 回滚点：文档阶段不改变运行系统；代码修正回到阶段 7 已验证提交。
 
-阶段记录：阶段 8 已新增 [`docs/architecture.md`](../../../docs/architecture.md) 和 [`docs/operations.md`](../../../docs/operations.md)，记录架构所有权、设备扩展、输入更新、CI、部署回滚、系统代清理和 EFI 人工门禁；公共模块静态泄漏审查通过。提交 `a773768` 推送后等待 GitHub Actions 最终检查，按用户指令不执行 `nix fmt`、`boot` 或 `switch`，CI 完成后直接归档主任务。
+阶段记录：阶段 8 已新增 [`docs/architecture.md`](../../../docs/architecture.md) 和 [`docs/operations.md`](../../../docs/operations.md)，记录架构所有权、设备扩展、输入更新、CI、部署回滚、系统代清理和 EFI 人工门禁；公共模块静态泄漏审查通过。最终归档提交 `9ccbc5d` 的 [NixOS Flake Check #5](https://github.com/P-Peaceful/my-nixos-config/actions/runs/32665778470) 已成功，最新 [NixOS Build #5](https://github.com/P-Peaceful/my-nixos-config/actions/runs/32665818260) 当前仍在构建；按用户指令不执行 `nix fmt`、`boot` 或 `switch`，阶段 8 已归档，未将构建中的状态写成成功。
 
 ## 最终质量门禁
 

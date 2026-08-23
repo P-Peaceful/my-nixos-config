@@ -12,5 +12,6 @@
 
   imports = [
     ../../modules/nixos/roles/laptop.nix
+    ./hardware-configuration.nix
   ];
 }

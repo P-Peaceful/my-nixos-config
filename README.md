@@ -56,4 +56,4 @@ nix eval --json .#nixosConfigurations.thinkbook14.config.services.printing.enabl
 
 ## 后续阶段边界
 
-本阶段不执行 `nixos-rebuild boot` 或 `switch`，不写入 EFI，也不验证真实设备的硬件、Windows 启动项和系统代。阶段 5 的 GDM 密码登录、GNOME 基础组件、Fcitx5 + Rime、注销回 GDM 及阶段 4 回滚点仍需在目标设备手动验收；后续硬件集成工作如需部署，必须另行确认现场信息和回滚方案。
+本阶段不执行 `nixos-rebuild boot` 或 `switch`，不写入 EFI，也不验证真实设备的硬件、Windows 启动项和系统代。按用户最新自动推进指令，阶段 5 的现场验收延期记录，推送后直接归档并进入后续阶段；后续硬件集成工作如需部署，必须另行确认现场信息和回滚方案。

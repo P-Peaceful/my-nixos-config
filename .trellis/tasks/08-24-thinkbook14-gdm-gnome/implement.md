@@ -39,8 +39,10 @@ nix eval --json .#nixosConfigurations.thinkbook14.config.services.printing.enabl
 
 ## 手动验收与归档门禁
 
+以下现场项目尚未执行。根据用户最新指令，本轮不等待这些项目，推送完成后直接归档阶段 5；归档仅表示用户授权的流程推进，不表示真实设备验收已通过。
+
 - [ ] 用户在真实设备通过 GDM 密码登录 GNOME。
 - [ ] 用户在 GNOME 中验证 Fcitx5 + Rime 中文输入、英文输入、控制中心和 Nautilus。
 - [ ] 用户注销并返回 GDM；确认未启用自动登录。
 - [ ] 用户确认阶段 4 回滚系统代可用。
-- [ ] 自动检查与手动验收记录完成后，才将阶段 5 标记完成并归档，再创建阶段 6；当前仅自动检查已完成。
+- [x] 按用户最新指令，跳过 `nix fmt` 与 `nixos-rebuild boot`，以已通过的 GitHub Actions 结果作为自动检查依据，推送后直接归档并创建阶段 6。

@@ -18,5 +18,13 @@
   outputs = { nixpkgs, ... }:
     {
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
+
+      nixosConfigurations.thinkbook14 = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./modules/nixos/core
+          ./hosts/thinkbook14
+        ];
+      };
     };
 }

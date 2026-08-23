@@ -44,6 +44,64 @@ Home Manager 和 Noctalia 必须使用 `inputs.nixpkgs.follows = "nixpkgs"`，�
 
 所有输入必须由 `flake.lock` 固定后才能交付。锁文件只能通过 `nix flake lock` 或等价的 Nix 命令生成，不能凭手工猜测修订、时间戳或哈希。更新输入时单独审阅锁文件变更，并重新运行完整检查。
 
+## 阶段化通用闭包例外
+
+### 1. 范围 / 触发条件
+
+仅当当前 Trellis 子任务的 `prd.md` 明确批准“先建立通用系统闭包”，且明确写出不需要 `flake.lock` 和 `hardware-configuration.nix` 时，才允许本例外。该例外只适用于求值、构建和静态检查，不自动扩展为可部署主机。
+
+### 2. 输出签名
+
+- Flake 可以提供 `nixosConfigurations.<主机名>`。
+- 主机入口可以只导入公共核心模块，不导入 `hardware-configuration.nix`。
+- `boot.loader.systemd-boot.*` 可以作为配置契约声明，但不得据此执行 EFI 写入或现场部署。
+
+### 3. 合同
+
+- 任务必须明确记录未生成 `flake.lock`，并接受输入未锁定的可复现性取舍。
+- 任务不得创建空的硬件配置来模拟真实设备事实。
+- 没有硬件配置时，不得声明文件系统、UUID、EFI 分区或 Windows loader 路径。
+- 未运行的 Nix 检查必须标记为“待目标 NixOS 执行”。
+
+### 4. 验证与错误矩阵
+
+| 条件 | 结果 |
+| --- | --- |
+| 子任务 PRD 明确批准例外 | 可创建通用主机输出并进行求值/构建规划 |
+| PRD 未明确批准例外 | 仍要求 `flake.lock` 和真实硬件配置 |
+| 试图用占位硬件文件补齐配置 | 失败，删除占位文件并退回规划 |
+| 试图执行 `boot`、`switch` 或 EFI 写入 | 失败，停止部署并要求硬件事实与现场验收 |
+| 当前环境没有 Nix | 检查记录为待目标 NixOS 执行，不得报告通过 |
+
+### 5. 正确 / 基线 / 错误案例
+
+- 正确：PRD 明确例外，主机入口只组合核心模块，声明 systemd-boot，且不写入硬件事实。
+- 基线：无 `flake.lock` 时保留未锁定输入，并在任务和 README 中记录风险。
+- 错误：生成虚假的 `hardware-configuration.nix`、猜测 UUID，或在无现场信息时执行引导部署。
+
+### 6. 必需测试与断言点
+
+- Flake 输出存在 `nixosConfigurations.<主机名>`。
+- 主机名、`system.stateVersion`、核心服务和引导选项可静态断言。
+- 静态检查确认不存在 `hardware-configuration.nix`、EFI 路径和越界桌面/阶段服务。
+- 具备 Nix 时运行 `nix fmt -- --check .`、`nix flake check`、目标闭包构建和关键选项求值。
+
+### 7. 错误写法与正确写法
+
+错误：
+
+```nix
+modules = [ ./hardware-configuration.nix ./hosts/thinkbook14 ];
+```
+
+正确：
+
+```nix
+modules = [ ./modules/nixos/core ./hosts/thinkbook14 ];
+```
+
+前者把不存在或未经确认的机器事实伪装成构建依赖；后者只构建已获批准的通用核心闭包，硬件集成由后续任务负责。
+
 ## 阶段 1 可执行契约
 
 ### 1. 范围 / 触发条件

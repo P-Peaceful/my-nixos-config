@@ -262,3 +262,99 @@ imports = [ ../../modules/nixos/roles/laptop.nix ];
 ## 官方研究依据
 
 版本和模块边界以父任务的 [官方模块研究](../../tasks/08-23-nixos-26-05-multi-device/official-research.md) 为设计基线，最终选项定义必须以 `flake.lock` 锁定的 Nixpkgs、Home Manager 和 Noctalia 源码为准。该研究中的官方来源包括 NixOS 手册、Nixpkgs 26.05 模块、Home Manager 26.05 文档以及 Noctalia v5 文档和上游 Flake。
+
+## Home Manager 与 Fcitx5 用户模块契约
+
+### 1. 范围 / 触发条件
+
+- 触发条件：NixOS Flake 将 Home Manager 作为 NixOS 模块接入，并由 Home Manager 管理用户级输入法。
+- 适用目录：`flake.nix`、`home/core/`、`home/<用户名>/`。
+- 本契约不授权加入桌面会话、显示管理器或系统级重复输入法配置。
+
+### 2. 接口签名
+
+Flake 组合必须提供以下接口：
+
+```nix
+outputs = { nixpkgs, home-manager, ... }: {
+  nixosConfigurations.<主机名> = nixpkgs.lib.nixosSystem {
+    modules = [
+      home-manager.nixosModules.home-manager
+      {
+        home-manager.useGlobalPkgs = true;
+        home-manager.useUserPackages = true;
+        home-manager.users.<用户名> = import ./home/<用户名>;
+      }
+    ];
+  };
+};
+```
+
+用户模块的 Fcitx5 接口为：
+
+```nix
+i18n.inputMethod = {
+  enable = true;
+  type = "fcitx5";
+  fcitx5.addons = [ pkgs.fcitx5-rime ];
+};
+```
+
+### 3. 配置合同
+
+- Home Manager 与根 Flake 使用同一 `nixpkgs`，其输入必须声明 `inputs.nixpkgs.follows = "nixpkgs"`。
+- 每个用户入口固定自己的 `home.stateVersion`，不得随输入更新自动漂移。
+- Home Manager 是用户包、用户配置和 Fcitx5 用户服务的唯一配置所有者。
+- Fcitx5 使用 Home Manager 自动生成的 `systemd.user.services.fcitx5-daemon`；除非有独立批准，不自定义同名 unit、会话脚本或环境覆盖。
+- 最小 Fcitx5 配置只声明 `enable`、`type` 和批准的附加组件；`settings`、`themes`、`quickPhrase`、`quickPhraseFiles` 等自定义项保持未声明。
+
+### 4. 验证与错误矩阵
+
+| 条件 | 结果 |
+| --- | --- |
+| `home-manager.nixosModules.home-manager` 未接入 | 失败：用户配置不会随 NixOS 系统闭包构建 |
+| `useGlobalPkgs` 或 `useUserPackages` 不是 `true` | 失败：违反单一 Nixpkgs 和用户包路径合同 |
+| Fcitx5 使用弃用的 `i18n.inputMethod.enabled` | 失败：改用 `enable = true` 与 `type = "fcitx5"` |
+| Fcitx5 addon 不在 Home Manager 用户模块中 | 失败：不得把用户级输入法复制到 NixOS 模块 |
+| 当前环境无 Nix | 只能做静态边界检查；格式、求值和构建记录为待目标 NixOS 执行 |
+
+### 5. 正确 / 基线 / 错误案例
+
+- 正确：Flake 接入 Home Manager NixOS 模块，用户入口只声明 `home.stateVersion` 与最小 Fcitx5 合同。
+- 基线：没有 `flake.lock` 时不手工伪造锁定值，并在任务与 README 中记录待目标环境验证。
+- 错误：在 `modules/nixos/` 再声明一份 Fcitx5 daemon，或在用户入口加入自定义词库、主题、布局和快捷键。
+
+### 6. 必需测试与断言点
+
+- `nix fmt -- --check .`：断言 Flake 与 Home Manager 文件符合仓库格式化器。
+- `nix flake check`：断言 Home Manager 模块可合并且 Flake 输出可评估。
+- `nix build .#nixosConfigurations.<主机名>.config.system.build.toplevel`：断言 Home Manager activation 进入系统闭包。
+- `nix eval`：断言 `home-manager.useGlobalPkgs`、`home-manager.useUserPackages` 为 `true`，用户 `home.stateVersion` 为批准版本。
+- 静态检查：断言只存在一个 Fcitx5 配置所有者，且不存在桌面、自定义词库/主题/布局/快捷键或自定义同名 systemd unit。
+
+### 7. 错误写法与正确写法
+
+错误：
+
+```nix
+home-manager.users.<用户名> = {
+  home.stateVersion = "latest";
+  i18n.inputMethod.enabled = "fcitx5";
+};
+```
+
+正确：
+
+```nix
+home-manager.users.<用户名> = import ./home/<用户名>;
+
+# home/<用户名>/default.nix
+{
+  home.stateVersion = "26.05";
+  i18n.inputMethod = {
+    enable = true;
+    type = "fcitx5";
+    fcitx5.addons = [ pkgs.fcitx5-rime ];
+  };
+}
+```

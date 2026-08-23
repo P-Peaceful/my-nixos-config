@@ -1,0 +1,4 @@
+{"file":".trellis/spec/nix/index.md","reason":"Nix/NixOS 模块边界、开发前门禁和质量检查要求。"}
+{"file":".trellis/spec/nix/project-guidelines.md","reason":"Home Manager、Flake 输入跟随、用户级与系统级配置所有权及 Nix 验证契约。"}
+{"file":".trellis/tasks/08-23-nixos-26-05-multi-device/official-research.md","reason":"Home Manager 26.05、Fcitx5 选项、useGlobalPkgs/useUserPackages 和 stateVersion 的官方研究基线。"}
+{"file":".trellis/tasks/08-24-thinkbook14-home-fcitx5/research/home-manager-fcitx5-interface.md","reason":"本阶段核对的 Home Manager Fcitx5 当前接口、自动 systemd 用户服务和 NixOS 输入法版本边界。"}

@@ -1,0 +1,4 @@
+{"file":".trellis/spec/nix/index.md","reason":"复核新增 Home Manager 与用户模块是否遵守 Nix 层质量检查和所有权边界。"}
+{"file":".trellis/spec/nix/project-guidelines.md","reason":"复核 Flake 输入、Home Manager 用户配置、禁止越界能力和验证矩阵。"}
+{"file":".trellis/tasks/08-23-nixos-26-05-multi-device/official-research.md","reason":"复核 Home Manager 26.05 与 Fcitx5 官方接口、兼容性和阶段边界。"}
+{"file":".trellis/tasks/08-24-thinkbook14-home-fcitx5/research/home-manager-fcitx5-interface.md","reason":"复核实现是否使用当前 Fcitx5 选项、是否依赖 Home Manager 自动用户服务，以及是否避免系统级重复所有权。"}

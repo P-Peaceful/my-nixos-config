@@ -1,0 +1,5 @@
+{"file":".trellis/tasks/08-23-nixos-26-05-multi-device/official-research.md","reason":"提供 NixOS 26.05、systemd-boot、用户与核心系统选项的官方依据"}
+{"file":".trellis/spec/nix/index.md","reason":"确定 Nix 配置工作开始前必须读取的项目规范入口"}
+{"file":".trellis/spec/nix/project-guidelines.md","reason":"约束 Flake、主机、模块、硬件事实和阶段边界的实现方式"}
+{"file":".trellis/spec/guides/code-reuse-thinking-guide.md","reason":"约束核心模块与 thinkbook14 主机配置的职责分离"}
+{"file":".trellis/tasks/08-23-thinkbook14-core-boot/prd.md","reason":"记录本子任务不创建、不导入 hardware-configuration.nix 和 flake.lock 的范围决策"}

@@ -1,0 +1,4 @@
+{"file":".trellis/tasks/08-23-nixos-26-05-multi-device/official-research.md","reason":"复核 systemd-boot 与 NixOS 核心选项是否符合官方规范"}
+{"file":".trellis/spec/nix/project-guidelines.md","reason":"检查目录边界、硬件配置真实性、格式和构建验证要求"}
+{"file":".trellis/spec/guides/cross-layer-thinking-guide.md","reason":"检查 Flake 输出、主机入口、核心模块与引导选项的完整组合链路"}
+{"file":".trellis/tasks/08-23-thinkbook14-core-boot/design.md","reason":"检查通用主机入口不依赖硬件事实、不写入 EFI 路径，并保持阶段边界"}

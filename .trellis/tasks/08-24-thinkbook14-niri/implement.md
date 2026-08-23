@@ -27,7 +27,12 @@ nix eval --json .#nixosConfigurations.thinkbook14.config.environment.systemPacka
 nix build .#nixosConfigurations.thinkbook14.config.system.build.toplevel --no-link --show-trace
 ```
 
-GitHub Actions 负责 Flake 检查、配置枚举和主机闭包构建；本地没有 Nix，未执行本地 Nix 命令。不得把 CI 绿色结果解释为真实会话验收。
+GitHub Actions 负责 Flake 检查、配置枚举和主机闭包构建；本地没有 Nix，未执行本地 Nix 命令。提交 `35dfef6` 的自动验证结果：
+
+- [x] `NixOS Flake Check #3`：<https://github.com/P-Peaceful/my-nixos-config/actions/runs/32664721585>
+- [x] `NixOS Build #3`：<https://github.com/P-Peaceful/my-nixos-config/actions/runs/32664754499>，配置枚举与 `thinkbook14` 闭包构建成功。
+
+不得把 CI 绿色结果解释为真实会话验收。
 
 ## 手动验收与归档记录
 

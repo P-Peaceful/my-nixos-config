@@ -109,7 +109,7 @@ nix eval --raw .#nixosConfigurations.thinkbook14.config.networking.hostName
 
 回滚点：从 GDM 选择 GNOME，或启动阶段 5 系统代。
 
-阶段记录：阶段 6 已接入官方 Niri 模块和最小运行时依赖，未创建自定义 KDL、Waybar 或 Noctalia 配置；待提交推送后的 GitHub Actions 检查完成后归档。
+阶段记录：阶段 6 已接入官方 Niri 模块和最小运行时依赖，未创建自定义 KDL、Waybar 或 Noctalia 配置。提交 `35dfef6` 已通过 [NixOS Flake Check #3](https://github.com/P-Peaceful/my-nixos-config/actions/runs/32664721585) 和 [NixOS Build #3](https://github.com/P-Peaceful/my-nixos-config/actions/runs/32664754499)，配置枚举与 `thinkbook14` 闭包构建成功；按用户指令延期现场会话验收，阶段 6 可直接归档并进入阶段 7。
 
 ## 阶段 7：Noctalia v5 官方默认桌面外壳
 

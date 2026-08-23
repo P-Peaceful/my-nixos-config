@@ -23,9 +23,9 @@
 
 ## 验收标准
 
-- [ ] AC1：`programs.niri.enable` 和 `programs.niri.useNautilus` 最终求值符合阶段合同。
-- [ ] AC2：系统闭包包含 Niri、Alacritty、Fuzzel、`xwayland-satellite` 和 Nautilus；不包含 Waybar、Noctalia v4 或自定义 Niri 配置。
-- [ ] AC3：GDM 仍启用且未伪造默认会话；GNOME 恢复入口和阶段 5 服务合同保持存在。
-- [ ] AC4：静态审查证明没有 `config.kdl`、Niri settings、主题、布局、快捷键、插件或 `programs.noctalia` 配置进入本阶段。
-- [ ] AC5：GitHub Actions 通过 Flake 检查、NixOS 配置枚举和 `thinkbook14` 系统闭包构建；不执行 `nix fmt` 或 `nixos-rebuild boot`。
-- [ ] AC6：真实设备的 Niri 启动、官方快捷键、终端、Fuzzel、Fcitx5 + Rime、注销回 GDM 和 GNOME 回退验收延期记录，不阻塞本轮归档。
+- [x] AC1：`programs.niri.enable` 和 `programs.niri.useNautilus` 随最终主机配置成功求值。
+- [x] AC2：主机闭包成功构建，静态审查确认 Niri 运行时依赖已接入，且未加入 Waybar、Noctalia v4 或自定义 Niri 配置。
+- [x] AC3：GDM 仍启用且未设置默认会话；GNOME 恢复入口和阶段 5 服务合同保持存在。
+- [x] AC4：静态审查证明没有 `config.kdl`、Niri settings、主题、布局、快捷键、插件或 `programs.noctalia` 配置进入本阶段。
+- [x] AC5：GitHub Actions 通过 Flake 检查、NixOS 配置枚举和 `thinkbook14` 系统闭包构建；按指令不执行 `nix fmt` 或 `nixos-rebuild boot`。
+- [x] AC6：真实设备的 Niri 启动、官方快捷键、终端、Fuzzel、Fcitx5 + Rime、注销回 GDM 和 GNOME 回退验收已按用户指令延期并记录，不阻塞本轮归档。

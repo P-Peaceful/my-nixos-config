@@ -85,13 +85,15 @@ nix eval --raw .#nixosConfigurations.thinkbook14.config.networking.hostName
 
 目标：先建立独立、可靠的图形恢复入口，再引入 Niri。
 
-- [ ] 启用 GDM 并确认自动登录关闭。
-- [ ] 启用 GNOME 会话，关闭 GNOME core apps。
-- [ ] 保留 Shell、控制中心、Nautilus 和恢复所需门户。
-- [ ] 显式关闭 NixOS 层 IBus、Bolt、打印及其他越界默认服务。
+- [x] 启用 GDM 并确认自动登录关闭。
+- [x] 启用 GNOME 会话，关闭 GNOME core apps。
+- [x] 保留 Shell、控制中心、Nautilus 和恢复所需门户。
+- [x] 显式关闭 NixOS 层 IBus、Bolt、打印及其他越界默认服务。
 - [ ] 用户验证 GDM 密码登录、GNOME 会话、Fcitx5 + Rime、注销返回 GDM。
 
 回滚点：启动阶段 4 系统代或使用 TTY。
+
+阶段记录：阶段 5 模块已接入 `thinkbook14`，静态边界检查和 `git diff --check` 已完成。由于当前环境没有 Nix，格式检查、Flake 检查、主机闭包构建和 GDM/GNOME/输入法/Bolt/打印关键选项求值均待目标 NixOS 执行；GDM 密码登录、GNOME 基础组件、Fcitx5 + Rime、注销回 GDM 及阶段 4 回滚点仍待用户在真实设备验收。本阶段未执行 `nixos-rebuild boot` 或 `switch`。
 
 ## 阶段 6：Niri 官方默认会话
 

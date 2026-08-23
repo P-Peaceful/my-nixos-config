@@ -358,3 +358,62 @@ home-manager.users.<用户名> = import ./home/<用户名>;
   };
 }
 ```
+
+## GDM 与精简 GNOME 恢复会话契约
+
+### 1. 范围 / 触发条件
+
+- 触发条件：阶段任务需要在 Niri/Noctalia 之前提供独立的图形恢复入口。
+- 适用目录：`modules/nixos/desktop/gdm-gnome.nix` 与 `hosts/<主机名>/default.nix`。
+- 本契约不授权加入 Niri、Noctalia、Waybar、桌面主题或个人应用配置。
+
+### 2. 配置签名
+
+恢复模块必须显式声明以下最终配置：
+
+```nix
+services.displayManager.gdm.enable = true;
+services.displayManager.autoLogin.enable = false;
+services.desktopManager.gnome.enable = true;
+services.gnome.core-apps.enable = false;
+i18n.inputMethod.enable = false;
+environment.systemPackages = [ pkgs.nautilus ];
+```
+
+GNOME 的 Shell、控制中心和门户由官方 GNOME 桌面模块提供；关闭 `core-apps` 后必须显式补回恢复所需的 Nautilus。Bolt 和打印由通用笔记本角色统一声明为关闭，桌面模块不得重复声明。Fcitx5 仍由 Home Manager 用户模块独占，NixOS 层不得再创建输入法用户服务。
+
+### 3. 验证与错误矩阵
+
+| 条件 | 结果 |
+| --- | --- |
+| GDM、GNOME 或恢复包缺失 | 阶段验收失败，不能归档或进入 Niri 阶段 |
+| 自动登录不是 `false` | 阶段验收失败，必须删除自动登录用户和开关 |
+| GNOME 默认 IBus、Bolt 或打印被保留 | 阶段验收失败；IBus 在桌面模块关闭，Bolt/打印由笔记本角色保持 `false` |
+| 本地没有 Nix | 不得声称本地检查通过；由 CI 执行 Flake 检查和主机闭包构建 |
+| CI Flake 检查或闭包构建失败 | 保持任务 `in_progress`，修复后重新检查 |
+
+### 4. CI 自动检查合同
+
+GitHub Actions 至少应在目标分支上执行：
+
+```sh
+nix flake check --no-build --show-trace
+nix eval --json .#nixosConfigurations --apply builtins.attrNames
+nix build .#nixosConfigurations.<主机名>.config.system.build.toplevel --no-link --show-trace
+```
+
+CI 只能证明配置求值和系统闭包构建；GDM 密码登录、GNOME/Fcitx5 实际会话、注销和系统代回滚仍属于真实设备手动验收，不能由绿色 CI 自动推断。
+
+### 5. 正确 / 基线 / 错误案例
+
+- 正确：桌面模块集中声明 GDM/GNOME 和 IBus 覆盖，主机入口只导入模块，CI 构建 `nixosConfigurations` 中的每个主机。
+- 基线：本地没有 Nix 时保留待 CI 执行的记录，推送后以对应提交的 Action 结果作为自动检查证据。
+- 错误：关闭 `core-apps` 后不补 Nautilus，在桌面模块重复声明 Bolt/打印，或为了让 GNOME 输入法工作在 NixOS 层复制一份 Fcitx5/IBus 服务。
+
+### 6. 必需测试与断言点
+
+- 静态检查：桌面模块不包含 Niri、Noctalia、Waybar、主题、插件或硬件事实。
+- `nix flake check --no-build --show-trace`：断言 Flake 输出可求值。
+- 动态主机矩阵构建：断言每个 `nixosConfigurations.<主机名>.config.system.build.toplevel` 可构建。
+- `nix eval`：断言 GDM、GNOME、Nautilus、自动登录、IBus、Bolt、打印和指纹服务的最终值符合阶段合同。
+- 手动验收：断言真实设备可以登录 GNOME、使用 Fcitx5 + Rime、打开 Nautilus、注销回 GDM 并启动上一已验证系统代。

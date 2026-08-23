@@ -90,5 +90,5 @@
 - 在锁定 NixOS 26.05 后，以 `nix eval` 或选项文档确认所有选项仍存在且类型一致。
 - 在部署 systemd-boot 前，确认 UEFI 模式、EFI 系统分区挂载点以及 Windows EFI 文件位置。
 - 若 Windows 未自动显示，不得猜测 UUID 或设备路径；先收集真实分区与 EFI 信息，再采用官方链式启动方案。
-- GNOME 启用后必须检查最终合并配置，确认 IBus、Bolt、打印和自动登录没有被间接启用。
+- GNOME 启用后必须检查最终合并配置，确认 IBus、Bolt、打印和自动登录没有被间接启用；Bolt/打印的唯一配置所有者仍是通用笔记本角色。
 - 分别登录 Niri 与 GNOME，确认 Noctalia 服务只在 Niri 中启动；若会话环境值与预期不同，暂停并依据实际 systemd 用户环境修正条件。

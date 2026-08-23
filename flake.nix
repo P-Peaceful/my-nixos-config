@@ -1,5 +1,5 @@
 {
-  description = "NixOS 配置仓库阶段 4：Home Manager 与 Fcitx5 用户配置";
+  description = "NixOS 配置仓库阶段 5：GDM 与精简 GNOME 恢复会话";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";

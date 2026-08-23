@@ -1,0 +1,91 @@
+name: NixOS Check
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  check:
+    name: Check NixOS Flake
+    runs-on: ubuntu-latest
+
+    outputs:
+      matrix: ${{ steps.configurations.outputs.matrix }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install Nix
+        uses: DeterminateSystems/determinate-nix-action@v3
+
+      # 仓库没有 flake.lock 时，在 CI 中临时生成。
+      # 不会提交回仓库。
+      - name: Generate flake lock
+        run: nix flake lock
+
+      - name: Check NixOS Flake
+        run: |
+          nix flake check \
+            --no-build \
+            --show-trace
+
+      - name: Get NixOS configurations
+        id: configurations
+        shell: bash
+        run: |
+          matrix="$(
+            nix eval \
+              --json \
+              .#nixosConfigurations \
+              --apply builtins.attrNames
+          )"
+
+          echo "Found configurations:"
+          echo "$matrix"
+
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
+      # 让后面的 Matrix Build 使用完全相同的 flake.lock。
+      - name: Upload flake lock
+        uses: actions/upload-artifact@v4
+        with:
+          name: flake-lock
+          path: flake.lock
+          retention-days: 1
+
+  build:
+    name: Build ${{ matrix.host }}
+    needs:
+      - check
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        host: ${{ fromJSON(needs.check.outputs.matrix) }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Download flake lock
+        uses: actions/download-artifact@v4
+        with:
+          name: flake-lock
+          path: .
+
+      - name: Install Nix
+        uses: DeterminateSystems/determinate-nix-action@v3
+
+      - name: Setup Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Build ${{ matrix.host }}
+        run: |
+          nix build \
+            ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
+            --no-link \
+            --show-trace

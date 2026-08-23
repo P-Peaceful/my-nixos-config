@@ -26,3 +26,24 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 2: 完成 thinkbook14 通用笔记本角色
+
+**Date**: 2026-08-24
+**Task**: 完成 thinkbook14 通用笔记本角色
+**Branch**: `master`
+
+### Summary
+
+新增可复用的通用笔记本系统角色，启用 NetworkManager、PipeWire PulseAudio 兼容层、Bluetooth、UPower、Power Profiles Daemon、Polkit 与 fwupd，并显式关闭指纹、打印和 Bolt 授权服务。thinkbook14 入口仅导入该角色；静态检查通过，Nix 验证待目标 NixOS 执行。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `d9f9792` | (see git log) |
+
+### Status
+
+[OK] **Completed**

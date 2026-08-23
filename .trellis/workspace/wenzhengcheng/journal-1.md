@@ -47,3 +47,25 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 3: 阶段 4：Home Manager 与 Fcitx5
+
+**Date**: 2026-08-24
+**Task**: 阶段 4：Home Manager 与 Fcitx5
+**Branch**: `master`
+
+### Summary
+
+完成 thinkbook14 单用户 Home Manager 接入，启用 Fcitx5 与 fcitx5-rime，更新 Nix 配置规范并完成静态检查；Nix 格式、求值、闭包构建和目标设备手动验收待目标 NixOS 执行。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `b3430e5` | (see git log) |
+| `e36004d` | (see git log) |
+
+### Status
+
+[OK] **Completed**

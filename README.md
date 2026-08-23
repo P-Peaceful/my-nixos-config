@@ -1,6 +1,6 @@
 # NixOS 配置仓库
 
-当前仓库处于阶段 3：`thinkbook14` 核心系统、systemd-boot 配置与通用笔记本系统服务。当前仍不含图形桌面、硬件事实和现场部署。
+当前仓库处于阶段 4：`thinkbook14` 核心系统、systemd-boot 配置、通用笔记本系统服务，以及单用户 Home Manager 和 Fcitx5 + Rime 配置。当前仍不含图形桌面和现场部署。
 
 ## 当前阶段边界
 
@@ -8,7 +8,8 @@
 - Home Manager 和 Noctalia 的 Nixpkgs 输入跟随仓库的 `nixpkgs` 输入。
 - `modules/nixos/core/` 保存核心系统设置，`hosts/thinkbook14/` 保存主机身份和 systemd-boot 声明。
 - `modules/nixos/roles/laptop.nix` 保存跨设备通用的笔记本系统服务；主机入口只负责导入该角色。
-- 当前不包含 `hardware-configuration.nix`、图形桌面、Home Manager 或输入法。
+- `home/core/` 保存可跨用户复用的 Home Manager 基础入口，`home/wenzhengcheng/` 保存用户状态版本和最小 Fcitx5 + Rime 配置。
+- Home Manager 负责用户级输入法配置；当前不包含图形桌面、自定义词库/主题/布局/快捷键或现场部署。
 
 ## 输入与锁定
 
@@ -22,6 +23,9 @@ nix flake check
 nix fmt -- --check .
 nix build .#nixosConfigurations.thinkbook14.config.system.build.toplevel
 nix eval --raw .#nixosConfigurations.thinkbook14.config.networking.hostName
+nix eval --json .#nixosConfigurations.thinkbook14.config.home-manager.useGlobalPkgs
+nix eval --json .#nixosConfigurations.thinkbook14.config.home-manager.useUserPackages
+nix eval --json .#nixosConfigurations.thinkbook14.config.home-manager.users.wenzhengcheng.home.stateVersion
 ```
 
 本工作区无法执行上述命令，因为没有安装 Nix；以上检查均为“待目标 NixOS 执行”，不能标记为已通过：
@@ -31,6 +35,9 @@ nix eval --raw .#nixosConfigurations.thinkbook14.config.networking.hostName
 - `nix fmt -- --check .`
 - `nix build .#nixosConfigurations.thinkbook14.config.system.build.toplevel`
 - `nix eval --raw .#nixosConfigurations.thinkbook14.config.networking.hostName`
+- `nix eval --json .#nixosConfigurations.thinkbook14.config.home-manager.useGlobalPkgs`
+- `nix eval --json .#nixosConfigurations.thinkbook14.config.home-manager.useUserPackages`
+- `nix eval --json .#nixosConfigurations.thinkbook14.config.home-manager.users.wenzhengcheng.home.stateVersion`
 
 ## 后续阶段边界
 

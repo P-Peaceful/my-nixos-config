@@ -1,5 +1,5 @@
 {
-  description = "NixOS 配置仓库阶段 1：仓库与 Nix 规范基础";
+  description = "NixOS 配置仓库阶段 4：Home Manager 与 Fcitx5 用户配置";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
@@ -15,7 +15,7 @@
     };
   };
 
-  outputs = { nixpkgs, ... }:
+  outputs = { nixpkgs, home-manager, ... }:
     {
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
 
@@ -24,6 +24,14 @@
         modules = [
           ./modules/nixos/core
           ./hosts/thinkbook14
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.wenzhengcheng = import ./home/wenzhengcheng;
+            };
+          }
         ];
       };
     };

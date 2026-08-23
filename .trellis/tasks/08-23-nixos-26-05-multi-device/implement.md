@@ -93,7 +93,7 @@ nix eval --raw .#nixosConfigurations.thinkbook14.config.networking.hostName
 
 回滚点：启动阶段 4 系统代或使用 TTY。
 
-阶段记录：阶段 5 模块已接入 `thinkbook14`，静态边界检查和 `git diff --check` 已完成。由于当前环境没有 Nix，格式检查、Flake 检查、主机闭包构建和 GDM/GNOME/输入法/Bolt/打印关键选项求值均待目标 NixOS 执行；GDM 密码登录、GNOME 基础组件、Fcitx5 + Rime、注销回 GDM 及阶段 4 回滚点仍待用户在真实设备验收。本阶段未执行 `nixos-rebuild boot` 或 `switch`。
+阶段记录：阶段 5 模块已接入 `thinkbook14`，静态边界检查和 `git diff --check` 已完成。提交 `726cf2b` 已通过 [NixOS Flake Check #2](https://github.com/P-Peaceful/my-nixos-config/actions/runs/32663776376) 与 [NixOS Build #2](https://github.com/P-Peaceful/my-nixos-config/actions/runs/32663810179)，并完成 `thinkbook14` 主机闭包构建；本地未执行格式与关键选项求值命令。GDM 密码登录、GNOME 基础组件、Fcitx5 + Rime、注销回 GDM 及阶段 4 回滚点仍待用户在真实设备验收。本阶段未执行 `nixos-rebuild boot` 或 `switch`，因此阶段 5 子任务暂不归档，也不启动阶段 6。
 
 ## 阶段 6：Niri 官方默认会话
 

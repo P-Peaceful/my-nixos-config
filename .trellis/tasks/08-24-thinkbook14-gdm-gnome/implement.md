@@ -13,8 +13,8 @@
 2. [x] 在该模块保留 GNOME Shell、控制中心、Nautilus 和门户所需的最小恢复能力，禁止 Niri/Noctalia 配置进入本阶段。
 3. [x] 显式覆盖 NixOS 层 IBus；复核通用笔记本角色持有的 Bolt、打印和指纹关闭合同在 GNOME 合并后仍保持关闭。
 4. [x] 在 `hosts/thinkbook14/default.nix` 导入桌面模块，不修改 Flake 输入、硬件配置或 Home Manager 入口。
-5. [x] 更新 README 和阶段主任务清单，记录阶段 5 自动检查待目标 NixOS 执行及现场验收门禁。
-6. [x] 运行静态边界检查与 `git diff --check`；当前环境没有 Nix，所有 Nix 命令仍待目标 NixOS 执行。
+5. [x] 更新 README 和阶段主任务清单，记录阶段 5 自动检查结果及现场验收门禁。
+6. [x] 运行静态边界检查与 `git diff --check`；本地环境没有 Nix，Nix 验证由 GitHub Actions 执行。
 
 ## 自动验证
 
@@ -31,7 +31,11 @@ nix eval --json .#nixosConfigurations.thinkbook14.config.services.hardware.bolt.
 nix eval --json .#nixosConfigurations.thinkbook14.config.services.printing.enable
 ```
 
-当前环境没有 Nix，以上格式、Flake、主机闭包和关键选项求值命令均为“待目标 NixOS 执行”；本阶段已完成静态边界审查与 `git diff --check`。
+本地环境没有 Nix，未执行本地格式与求值命令；静态边界审查和 `git diff --check` 已通过。提交 `726cf2b` 的 GitHub Actions 结果如下：
+
+- [x] `NixOS Flake Check #2` 成功：<https://github.com/P-Peaceful/my-nixos-config/actions/runs/32663776376>。
+- [x] `NixOS Build #2` 成功，完成 `thinkbook14` 系统闭包构建：<https://github.com/P-Peaceful/my-nixos-config/actions/runs/32663810179>。
+- [x] 构建工作流的配置枚举步骤成功发现 `thinkbook14`；GDM、GNOME、输入法、Bolt 和打印选项随主机闭包一并进入构建求值。
 
 ## 手动验收与归档门禁
 
@@ -39,4 +43,4 @@ nix eval --json .#nixosConfigurations.thinkbook14.config.services.printing.enabl
 - [ ] 用户在 GNOME 中验证 Fcitx5 + Rime 中文输入、英文输入、控制中心和 Nautilus。
 - [ ] 用户注销并返回 GDM；确认未启用自动登录。
 - [ ] 用户确认阶段 4 回滚系统代可用。
-- [ ] 自动检查与手动验收记录完成后，才将阶段 5 标记完成并归档，再创建阶段 6。
+- [ ] 自动检查与手动验收记录完成后，才将阶段 5 标记完成并归档，再创建阶段 6；当前仅自动检查已完成。

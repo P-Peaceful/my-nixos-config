@@ -13,6 +13,7 @@
 - `modules/home/noctalia.nix` 保存 Noctalia v5 用户服务启用和仅限 Niri 会话的启动条件；不生成自定义 settings、调色板或插件配置。
 - `home/core/` 保存可跨用户复用的 Home Manager 基础入口，`home/wenzhengcheng/` 保存用户状态版本和最小 Fcitx5 + Rime 配置。
 - Home Manager 负责用户级输入法和 Noctalia 用户服务；GNOME 核心应用集合关闭但保留 Shell、控制中心、Nautilus 和门户基础服务；Niri 使用官方默认配置，Noctalia 仅在 Niri 会话条件满足时运行，当前不包含自定义词库/主题/布局/快捷键或现场部署。
+- 长期维护入口见 [`docs/architecture.md`](./docs/architecture.md) 和 [`docs/operations.md`](./docs/operations.md)。
 
 ## 输入与锁定
 

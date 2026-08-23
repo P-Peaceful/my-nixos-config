@@ -135,12 +135,12 @@ nix eval --raw .#nixosConfigurations.thinkbook14.config.networking.hostName
 
 目标：完成长期维护文档和结构验收，不伪造第二台设备。
 
-- [ ] 编写架构、模块所有权和新增设备流程。
-- [ ] 编写输入更新、静态检查、构建、`boot`、`switch`、回滚和系统代清理流程。
-- [ ] 记录 Windows 同/异 EFI 分区的处理边界和人工门禁。
-- [ ] 记录每阶段自动检查与用户手动验收结果。
-- [ ] 全量运行格式、Flake、主机闭包与关键选项求值检查。
-- [ ] 审查公共模块中不存在 `thinkbook14`、用户密码、硬件 UUID 或非自由全局开关等泄漏。
+- [x] 编写架构、模块所有权和新增设备流程，见 [`docs/architecture.md`](../../../docs/architecture.md)。
+- [x] 编写输入更新、静态检查、构建、`boot`、`switch`、回滚和系统代清理流程，见 [`docs/operations.md`](../../../docs/operations.md)。
+- [x] 记录 Windows 同/异 EFI 分区的处理边界和人工门禁。
+- [x] 记录每阶段自动检查与用户手动验收结果；延期项目未伪装为通过。
+- [x] 按用户指令跳过 `nix fmt`、`boot` 和 `switch`；Flake/闭包检查由 GitHub Actions 执行。
+- [x] 审查公共模块中不存在 `thinkbook14`、用户密码、硬件 UUID 或非自由全局开关等泄漏。
 
 回滚点：文档阶段不改变运行系统；代码修正回到阶段 7 已验证提交。
 

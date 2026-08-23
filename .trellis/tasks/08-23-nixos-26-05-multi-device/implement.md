@@ -144,15 +144,17 @@ nix eval --raw .#nixosConfigurations.thinkbook14.config.networking.hostName
 
 回滚点：文档阶段不改变运行系统；代码修正回到阶段 7 已验证提交。
 
+阶段记录：阶段 8 已新增 [`docs/architecture.md`](../../../docs/architecture.md) 和 [`docs/operations.md`](../../../docs/operations.md)，记录架构所有权、设备扩展、输入更新、CI、部署回滚、系统代清理和 EFI 人工门禁；公共模块静态泄漏审查通过。提交 `a773768` 推送后等待 GitHub Actions 最终检查，按用户指令不执行 `nix fmt`、`boot` 或 `switch`，CI 完成后直接归档主任务。
+
 ## 最终质量门禁
 
 ```bash
-nix fmt -- --check .
-nix flake check
-nix build .#nixosConfigurations.thinkbook14.config.system.build.toplevel
+git diff --check
+nix flake check --no-build --show-trace
+nix build .#nixosConfigurations.thinkbook14.config.system.build.toplevel --no-link --show-trace
 nix eval --json .#nixosConfigurations.thinkbook14.config.system.stateVersion
 nix eval --json .#nixosConfigurations.thinkbook14.config.services.displayManager.gdm.enable
 nix eval --json .#nixosConfigurations.thinkbook14.config.programs.niri.enable
 ```
 
-若当前执行环境没有 Nix，只能报告这些命令“待目标 NixOS 执行”，不得标记为通过。
+按用户指令跳过 `nix fmt`、`nixos-rebuild boot` 和 `switch`；本地没有 Nix 时由 GitHub Actions 执行 Flake 检查、配置枚举和主机闭包构建，现场会话验收保持延期记录。

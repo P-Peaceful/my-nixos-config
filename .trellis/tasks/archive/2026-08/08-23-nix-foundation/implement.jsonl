@@ -1,0 +1,2 @@
+{"file":".trellis/tasks/08-23-nixos-26-05-multi-device/official-research.md","reason":"提供阶段 1 输入来源、版本与官方模块研究基线"}
+{"file":".trellis/spec/guides/code-reuse-thinking-guide.md","reason":"约束最小 Flake 骨架，避免提前引入无复用证据的抽象"}

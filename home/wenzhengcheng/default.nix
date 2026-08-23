@@ -1,7 +1,10 @@
 { pkgs, ... }:
 
 {
-  imports = [ ../core ];
+  imports = [
+    ../core
+    ../../modules/home/noctalia.nix
+  ];
 
   home.stateVersion = "26.05";
 

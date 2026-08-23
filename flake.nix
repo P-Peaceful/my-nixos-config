@@ -1,5 +1,5 @@
 {
-  description = "NixOS 配置仓库阶段 5：GDM 与精简 GNOME 恢复会话";
+  description = "NixOS 配置仓库阶段 7：Noctalia v5 官方默认桌面外壳";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
@@ -15,7 +15,7 @@
     };
   };
 
-  outputs = { nixpkgs, home-manager, ... }:
+  outputs = { nixpkgs, home-manager, noctalia, ... }:
     {
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
 
@@ -29,7 +29,12 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              users.wenzhengcheng = import ./home/wenzhengcheng;
+              users.wenzhengcheng = {
+                imports = [
+                  ./home/wenzhengcheng
+                  noctalia.homeModules.default
+                ];
+              };
             };
           }
         ];

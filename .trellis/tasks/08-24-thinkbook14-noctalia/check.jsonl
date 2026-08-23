@@ -1,0 +1,3 @@
+{"file":".trellis/spec/nix/index.md","reason":"阶段 7 检查 Home Manager 桌面外壳和系统闭包边界。"}
+{"file":".trellis/spec/nix/project-guidelines.md","reason":"Noctalia v5 配置所有权、Niri-only 服务条件和 v4 禁止项。"}
+{"file":".trellis/tasks/08-23-nixos-26-05-multi-device/official-research.md","reason":"官方 Noctalia v5 Flake 与 Home Manager systemd 服务接口。"}

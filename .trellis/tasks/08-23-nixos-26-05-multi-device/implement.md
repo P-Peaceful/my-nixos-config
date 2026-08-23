@@ -117,15 +117,17 @@ nix eval --raw .#nixosConfigurations.thinkbook14.config.networking.hostName
 
 目标：在 Niri 中启用官方默认 Noctalia v5。
 
-- [ ] 导入锁定的 Noctalia v5 Home Manager 模块。
-- [ ] 只启用 `programs.noctalia.enable` 和 `programs.noctalia.systemd.enable`。
-- [ ] 保持 `settings`、调色板和插件为空，不生成自定义配置。
-- [ ] 为官方 Noctalia 用户服务添加仅限 Niri 会话的最小启动条件。
-- [ ] 验证 Noctalia 用户服务绑定 Wayland 会话 target、在 Niri 中启动、在 GNOME 中不启动，且构建中不混入 v4。
-- [ ] 用户验证状态栏、启动器、通知、快捷设置及默认桌面外壳行为。
-- [ ] 停用 Noctalia 用户服务，确认 GNOME 恢复会话仍独立可用。
+- [x] 导入锁定的 Noctalia v5 Home Manager 模块。
+- [x] 只启用 `programs.noctalia.enable` 和 `programs.noctalia.systemd.enable`。
+- [x] 保持 `settings`、调色板和插件为空，不生成自定义配置。
+- [x] 为官方 Noctalia 用户服务添加仅限 Niri 会话的最小启动条件。
+- [x] 静态检查 Noctalia 服务绑定 Wayland 会话 target、Niri-only 条件存在，且代码中不混入 v4。
+- [x] 按用户最新指令延期状态栏、启动器、通知、快捷设置及默认桌面外壳现场验收，推送后直接归档阶段 7。
+- [x] 按用户最新指令延期停用 Noctalia 后的 GNOME 现场回退验收，保留记录。
 
 回滚点：禁用 Noctalia 服务、从 GDM 进入 GNOME，或启动阶段 6 系统代。
+
+阶段记录：阶段 7 已接入官方 Noctalia v5 Home Manager 模块，仅在 Niri 会话条件满足时运行官方用户服务；settings、调色板、插件、Waybar 和 v4 配置均未加入，待 CI 验证后归档。
 
 ## 阶段 8：文档与多设备扩展验收
 

@@ -494,3 +494,77 @@ programs.niri = {
 ```
 
 前者把桌面外壳和自定义行为提前绑定到阶段 6；后者保留官方默认会话边界，把 Noctalia 和外壳策略留给阶段 7。
+
+## Noctalia v5 官方默认外壳契约
+
+### 1. 范围 / 触发条件
+
+- 触发条件：阶段 6 Niri 会话已接入，需要添加官方 Noctalia v5 用户级桌面外壳。
+- 适用目录：`flake.nix`、`home/<用户名>/` 和 `modules/home/noctalia.nix`。
+- 本契约不授权 Noctalia v4、`noctalia-shell`、Waybar、Niri KDL、主题、调色板、插件或自定义 settings。
+
+### 2. 配置签名
+
+```nix
+# flake.nix 的 Home Manager 用户 imports
+noctalia.homeModules.default
+
+# modules/home/noctalia.nix
+programs.noctalia = {
+  enable = true;
+  systemd.enable = true;
+};
+```
+
+官方模块提供 `programs.noctalia.package`、Wayland target 绑定和用户服务；仓库模块只提供 Niri-only `ExecCondition`，不复制 `systemd.user.services.noctalia` 的完整定义。
+
+### 3. 合同
+
+- `noctalia.homeModules.default` 必须来自 Flake 的 Noctalia v5 输入，并跟随仓库 `nixpkgs`。
+- `programs.noctalia.enable` 与 `programs.noctalia.systemd.enable` 必须启用；`settings`、`customPalettes` 和插件保持默认空值。
+- `noctalia` 服务必须绑定官方 `wayland.systemd.target`，并且只有 `XDG_CURRENT_DESKTOP`、`XDG_SESSION_DESKTOP` 或 `DESKTOP_SESSION` 任一为 `niri` 时执行。
+- GNOME 恢复会话不得启动 Noctalia；Fcitx5 仍由同一 Home Manager 用户模块管理。
+
+### 4. 验证与错误矩阵
+
+| 条件 | 结果 |
+| --- | --- |
+| 官方 Home Manager 模块未导入 | 失败：`programs.noctalia` 选项不可用 |
+| systemd 启用但 package 为空 | 失败：官方模块 assertion 触发 |
+| settings、调色板或插件被声明 | 违反官方默认外壳边界，删除后重检 |
+| Niri-only 条件缺失 | 失败：Noctalia 可能在 GNOME 恢复会话启动 |
+| 出现 `noctalia-shell` 或 v4 路径 | 失败：删除旧接口并只保留 v5 Flake 模块 |
+
+### 5. 正确 / 基线 / 错误案例
+
+- 正确：导入 `noctalia.homeModules.default`，只设置 enable/systemd，并为官方服务追加 Niri-only ExecCondition。
+- 基线：不设置 settings，让 Noctalia 使用官方默认配置；现场外壳验收可以延期但必须如实记录。
+- 错误：手工安装旧包、复制一份 Noctalia service、在 GNOME 环境无条件启动服务，或用 Waybar/Niri KDL提前实现外壳。
+
+### 6. 必需测试与断言点
+
+- 静态检查：断言只存在官方 Noctalia v5 接线，没有 v4、settings、调色板、插件、Waybar 或 Niri KDL。
+- `nix eval`：断言 Noctalia enable/systemd enable、服务 ExecCondition 和用户包进入最终配置。
+- `nix flake check` 与主机闭包构建：断言官方模块合并、package assertion 和 Home Manager activation 成功。
+- 现场检查：Niri 中外壳可用、GNOME 中服务不运行；用户明确延期时不能把延期写成现场通过。
+
+### 7. 错误写法与正确写法
+
+错误：
+
+```nix
+home.packages = [ inputs.noctalia-shell.packages.${pkgs.system}.default ];
+systemd.user.services.noctalia = { Service.ExecStart = "noctalia-shell"; };
+```
+
+正确：
+
+```nix
+imports = [ noctalia.homeModules.default ];
+programs.noctalia = {
+  enable = true;
+  systemd.enable = true;
+};
+```
+
+前者绕过官方 v5 模块和会话 target，容易把旧接口或 GNOME 启动污染带入系统；后者保留官方包、服务和验证合同，只在本地补充 Niri 会话条件。

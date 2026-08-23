@@ -52,11 +52,13 @@ nix eval --raw .#nixosConfigurations.thinkbook14.config.networking.hostName
 
 目标：引入与桌面无关的笔记本系统服务。
 
-- [ ] 创建可复用 laptop 角色模块。
-- [ ] 启用 NetworkManager、PipeWire/PulseAudio、Bluetooth、UPower、Power Profiles Daemon、Polkit 和 fwupd。
-- [ ] 明确保持指纹、打印和 Bolt/Thunderbolt 授权关闭。
+- [x] 创建可复用 laptop 角色模块。
+- [x] 启用 NetworkManager、PipeWire/PulseAudio、Bluetooth、UPower、Power Profiles Daemon、Polkit 和 fwupd。
+- [x] 明确保持指纹、打印和 Bolt/Thunderbolt 授权关闭。
 - [ ] 通过求值检查最终服务开关，避免 GNOME 尚未加入时隐藏依赖。
 - [ ] 用户验证网络、音频、蓝牙、电池状态、性能模式和固件服务。
+
+阶段记录：阶段 3 子任务已完成并归档；角色实现与静态边界检查已完成。由于当前环境没有 Nix，服务选项求值、Flake 检查和系统闭包构建待目标 NixOS 执行；网络、音频、蓝牙、电池、性能模式和 fwupd 的现场验证仍待用户完成。
 
 回滚点：启动阶段 2 系统代。
 
@@ -66,14 +68,16 @@ nix eval --raw .#nixosConfigurations.thinkbook14.config.networking.hostName
 
 目标：接入单用户 Home Manager，并建立中文输入法用户服务；尚不加入显示管理器。
 
-- [ ] 接入 Home Manager NixOS 模块，启用 `useGlobalPkgs` 与 `useUserPackages`。
-- [ ] 创建 `home/wenzhengcheng/default.nix` 与公共 home core。
-- [ ] 固定 `home.stateVersion = "26.05"`。
-- [ ] 用 Home Manager 启用 Fcitx5、systemd 用户服务和 `fcitx5-rime`。
-- [ ] 不声明自定义词库、主题、布局或快捷键。
+- [x] 接入 Home Manager NixOS 模块，启用 `useGlobalPkgs` 与 `useUserPackages`。
+- [x] 创建 `home/wenzhengcheng/default.nix` 与公共 home core。
+- [x] 固定 `home.stateVersion = "26.05"`。
+- [x] 用 Home Manager 启用 Fcitx5、systemd 用户服务和 `fcitx5-rime`。
+- [x] 不声明自定义词库、主题、布局或快捷键。
 - [ ] 验证 Home Manager activation package 随系统闭包构建。
 
 回滚点：启动阶段 3 系统代；Home Manager 与系统代一起回退。
+
+阶段记录：阶段 4 子任务已完成并归档；Home Manager 接线、单用户入口和最小 Fcitx5 + Rime 配置已提交，静态检查通过。由于当前环境没有 Nix，格式检查、Flake 求值、系统闭包构建和目标设备上的 activation、中文输入法及用户服务验证仍待目标 NixOS 执行；本阶段未执行 `nixos-rebuild boot` 或 `switch`。
 
 ## 阶段 5：GDM 与精简 GNOME 恢复会话
 

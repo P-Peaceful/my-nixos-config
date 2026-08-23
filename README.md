@@ -1,13 +1,14 @@
 # NixOS 配置仓库
 
-当前仓库处于阶段 2：`thinkbook14` 核心系统与 systemd-boot 配置。当前提供不含图形桌面、硬件事实和现场部署的通用 NixOS 系统闭包入口。
+当前仓库处于阶段 3：`thinkbook14` 核心系统、systemd-boot 配置与通用笔记本系统服务。当前仍不含图形桌面、硬件事实和现场部署。
 
 ## 当前阶段边界
 
 - `flake.nix` 声明 Nixpkgs 26.05、Home Manager `release-26.05`、Noctalia 官方 Flake、`x86_64-linux` 格式化器以及 `nixosConfigurations.thinkbook14`。
 - Home Manager 和 Noctalia 的 Nixpkgs 输入跟随仓库的 `nixpkgs` 输入。
 - `modules/nixos/core/` 保存核心系统设置，`hosts/thinkbook14/` 保存主机身份和 systemd-boot 声明。
-- 当前不包含 `hardware-configuration.nix`、图形桌面、Home Manager、输入法或阶段 3 的笔记本服务。
+- `modules/nixos/roles/laptop.nix` 保存跨设备通用的笔记本系统服务；主机入口只负责导入该角色。
+- 当前不包含 `hardware-configuration.nix`、图形桌面、Home Manager 或输入法。
 
 ## 输入与锁定
 

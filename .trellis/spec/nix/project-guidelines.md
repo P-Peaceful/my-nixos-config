@@ -181,6 +181,75 @@ nix flake check
 
 当仓库存在主机输出后，再按任务要求增加 `nix build` 和 `nix eval`；阶段 1 不伪造主机输出，也不以空的主机配置替代真实硬件文件。无 Nix 环境时，验证结果必须写为“待目标 NixOS 执行”，不得声称通过。
 
+## 通用笔记本角色契约
+
+### 1. 范围 / 触发条件
+
+- 触发条件：主机需要与桌面无关的通用笔记本系统服务时，使用 `modules/nixos/roles/laptop.nix`。
+- 角色只负责系统级服务；主机入口负责导入角色，不复制其中的服务选项。
+- 角色不得读取主机名、硬件 UUID、设备路径或用户级配置。
+
+### 2. 签名
+
+角色的 NixOS 模块签名为 `{ ... }: { ... }`，服务合同包含：
+
+```nix
+networking.networkmanager.enable
+services.pipewire.enable
+services.pipewire.pulse.enable
+hardware.bluetooth.enable
+services.upower.enable
+services.power-profiles-daemon.enable
+security.polkit.enable
+services.fwupd.enable
+```
+
+### 3. 合同
+
+- 上述通用服务必须启用。
+- `services.fprintd.enable`、`services.printing.enable` 和 `services.hardware.bolt.enable` 必须显式保持关闭。
+- 角色不得加入 GDM、桌面会话、Home Manager、输入法、硬件事实或现场部署行为。
+
+### 4. 验证与错误矩阵
+
+| 条件 | 结果 |
+| --- | --- |
+| 具备目标 Nix 环境 | 运行格式检查、`nix flake check`、目标闭包构建和关键选项求值 |
+| 当前环境没有 Nix | 所有 Nix 命令记录为“待目标 NixOS 执行”，不得报告为通过 |
+| 角色出现主机或硬件事实 | 违反模块边界，退回并移除该配置 |
+| 排除服务被启用或未显式关闭 | 验收失败，修正角色合同后再检查 |
+
+### 5. 正确 / 基线 / 错误案例
+
+- 正确：主机入口仅导入 `../../modules/nixos/roles/laptop.nix`，服务开关集中在角色中。
+- 基线：没有 Nix 时完成静态边界检查，并保留待目标环境执行的验证记录。
+- 错误：在角色中写入 `thinkbook14`、磁盘 UUID、EFI 路径、桌面模块或用户服务。
+
+### 6. 必需测试
+
+- 静态检查断言角色不包含主机名、硬件事实、桌面、Home Manager 或输入法引用。
+- `nix flake check` 与目标闭包构建断言主机输出可求值。
+- `nix eval` 分别断言八项通用服务为 `true`，并断言 fprintd、printing 和 Bolt 为 `false`。
+
+### 7. 错误写法与正确写法
+
+错误：
+
+```nix
+networking.networkmanager.enable = true;
+services.pipewire.enable = true;
+```
+
+将服务开关复制到每个主机入口会产生多个配置所有者，后续主机容易出现漂移。
+
+正确：
+
+```nix
+imports = [ ../../modules/nixos/roles/laptop.nix ];
+```
+
+把通用服务集中到角色模块，并让主机只组合角色，能够保持边界和验收点稳定。
+
 ## 禁止模式
 
 - 在阶段 1 创建 `nixosConfigurations`、`hosts/`、`modules/`、`home/` 或 `hardware-configuration.nix`。

@@ -9,4 +9,8 @@
   };
 
   boot.loader.efi.canTouchEfiVariables = true;
+
+  imports = [
+    ../../modules/nixos/roles/laptop.nix
+  ];
 }

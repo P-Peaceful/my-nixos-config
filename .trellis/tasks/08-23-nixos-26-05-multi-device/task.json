@@ -1,0 +1,30 @@
+{
+  "id": "nixos-26-05-multi-device",
+  "name": "nixos-26-05-multi-device",
+  "title": "构建可维护的多设备 NixOS 26.05 配置仓库",
+  "description": "",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "wenzhengcheng",
+  "assignee": "wenzhengcheng",
+  "createdAt": "2026-08-23",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "master",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [
+    "08-23-nix-foundation",
+    "08-23-thinkbook14-core-boot",
+    "08-23-thinkbook14-laptop-role"
+  ],
+  "parent": null,
+  "relatedFiles": [],
+  "notes": "",
+  "meta": {}
+}

@@ -1,0 +1,4 @@
+{"_example": "Fill with {\"file\": \"<path>\", \"reason\": \"<why>\"}. Put spec/research files only — no code paths. Run `python .trellis/scripts/get_context.py --mode packages` to list available specs. Delete this line once real entries are added."}
+{"file":".trellis/spec/nix/project-guidelines.md","reason":"检查模块目录、服务配置所有权和 Nix 输入边界"}
+{"file":".trellis/tasks/08-23-thinkbook14-laptop-role/design.md","reason":"检查 laptop 角色到 thinkbook14 主机入口的组合链路"}
+{"file":".trellis/tasks/08-23-thinkbook14-laptop-role/prd.md","reason":"检查阶段 3 不越界到桌面、用户层和硬件部署"}

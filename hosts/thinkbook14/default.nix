@@ -13,6 +13,7 @@
   imports = [
     ../../modules/nixos/roles/laptop.nix
     ../../modules/nixos/desktop/gdm-gnome.nix
+    ../../modules/nixos/desktop/niri.nix
     ./hardware-configuration.nix
   ];
 }

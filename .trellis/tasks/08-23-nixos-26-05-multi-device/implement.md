@@ -101,14 +101,15 @@ nix eval --raw .#nixosConfigurations.thinkbook14.config.networking.hostName
 
 目标：从 GDM 启动使用上游默认配置的 Niri，不加入 Noctalia。
 
-- [ ] 启用 NixOS 26.05 官方 Niri 模块。
-- [ ] 安装 Alacritty、Fuzzel 与 `xwayland-satellite`。
-- [ ] 不创建 Niri KDL 配置，不安装 Waybar。
-- [ ] 检查门户、Keyring 和 GDM 会话注册的最终合并结果。
-- [ ] 用户验证 Niri 启动、官方默认快捷键、终端、备用启动器和 Fcitx5 + Rime。
-- [ ] 用户验证可注销回 GDM 并进入 GNOME。
+- [x] 启用 NixOS 26.05 官方 Niri 模块。
+- [x] 安装 Alacritty、Fuzzel 与 `xwayland-satellite`。
+- [x] 不创建 Niri KDL 配置，不安装 Waybar。
+- [x] 检查门户、Keyring 和 GDM 会话注册的最终合并结果（自动检查待 CI）。
+- [x] 按用户最新指令延期 Niri/GNOME/Fcitx5 现场会话验收，推送后直接归档阶段 6。
 
 回滚点：从 GDM 选择 GNOME，或启动阶段 5 系统代。
+
+阶段记录：阶段 6 已接入官方 Niri 模块和最小运行时依赖，未创建自定义 KDL、Waybar 或 Noctalia 配置；待提交推送后的 GitHub Actions 检查完成后归档。
 
 ## 阶段 7：Noctalia v5 官方默认桌面外壳
 

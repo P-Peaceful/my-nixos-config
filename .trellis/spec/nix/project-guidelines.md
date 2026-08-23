@@ -417,3 +417,80 @@ CI 只能证明配置求值和系统闭包构建；GDM 密码登录、GNOME/Fcit
 - 动态主机矩阵构建：断言每个 `nixosConfigurations.<主机名>.config.system.build.toplevel` 可构建。
 - `nix eval`：断言 GDM、GNOME、Nautilus、自动登录、IBus、Bolt、打印和指纹服务的最终值符合阶段合同。
 - 手动验收：断言真实设备可以登录 GNOME、使用 Fcitx5 + Rime、打开 Nautilus、注销回 GDM 并启动上一已验证系统代。
+
+## Niri 官方默认会话契约
+
+### 1. 范围 / 触发条件
+
+- 触发条件：阶段 5 GDM/GNOME 恢复入口已提交后，需要接入 NixOS 26.05 官方 Niri 会话。
+- 适用目录：`modules/nixos/desktop/niri.nix` 与 `hosts/<主机名>/default.nix`。
+- 本契约不授权 Noctalia、Waybar、Niri KDL、自定义 settings、主题、布局、快捷键或插件。
+
+### 2. 配置签名
+
+```nix
+programs.niri = {
+  enable = true;
+  useNautilus = true;
+};
+
+environment.systemPackages = with pkgs; [
+  alacritty
+  fuzzel
+  xwayland-satellite
+];
+```
+
+官方 Niri 模块拥有会话注册、门户和 GNOME Keyring 集成；GDM 仍是唯一显示管理器，不设置 `services.displayManager.defaultSession`。Niri 模块不得复制 GDM/GNOME、Home Manager Fcitx5 或笔记本服务所有权。
+
+### 3. 合同
+
+- `programs.niri.enable` 和 `programs.niri.useNautilus` 必须在最终主机配置中为 `true`。
+- Alacritty、Fuzzel 和 `xwayland-satellite` 必须进入系统包闭包；Waybar 不得由阶段 6 安装。
+- 阶段 5 的 GDM、GNOME、Nautilus、Fcitx5、Bolt/打印/指纹合同保持不变。
+- 用户可从 GDM 选择 Niri 或 GNOME；不得通过默认会话选项隐藏恢复入口。
+
+### 4. 验证与错误矩阵
+
+| 条件 | 结果 |
+| --- | --- |
+| `programs.niri.enable` 未启用 | 阶段失败，不能归档 |
+| 自定义 `config.kdl`、settings 或 Waybar 出现 | 违反官方默认会话边界，删除后重检 |
+| Niri 依赖包未进入系统闭包 | 阶段失败，补齐 Alacritty/Fuzzel/xwayland-satellite |
+| Niri 覆盖 GDM/GNOME 或 Fcitx5 所有权 | 阶段失败，恢复单一配置所有者 |
+| 本地没有 Nix | 由 GitHub Actions 执行 Flake 检查和主机闭包构建，不能声称本地通过 |
+
+### 5. 正确 / 基线 / 错误案例
+
+- 正确：独立 Niri 模块启用官方选项并加入三个运行时包，主机入口只导入模块。
+- 基线：不写 Niri 配置文件，让官方模块和二进制默认配置生效，Noctalia 延后到下一阶段。
+- 错误：为状态栏提前安装 Waybar、在 Niri 模块复制 Fcitx5 服务，或设置 GDM 默认会话取代 GNOME 回退入口。
+
+### 6. 必需测试与断言点
+
+- 静态检查：断言没有 `config.kdl`、`programs.niri.settings`、Waybar、Noctalia、主题、布局、快捷键和插件。
+- `nix eval`：断言 Niri、useNautilus、GDM、GNOME 和相关系统服务最终值。
+- 系统包求值：断言 Alacritty、Fuzzel、xwayland-satellite 和 Nautilus 存在，Waybar 不存在。
+- `nix flake check`、动态主机闭包构建：断言官方会话模块可合并并完成系统闭包求值。
+- 现场会话登录、快捷键、输入法和注销属于独立手动记录；用户明确延期时不得把延期写成通过。
+
+### 7. 错误写法与正确写法
+
+错误：
+
+```nix
+programs.niri.settings = {
+  spawn-at-startup = [ "waybar" ];
+};
+```
+
+正确：
+
+```nix
+programs.niri = {
+  enable = true;
+  useNautilus = true;
+};
+```
+
+前者把桌面外壳和自定义行为提前绑定到阶段 6；后者保留官方默认会话边界，把 Noctalia 和外壳策略留给阶段 7。

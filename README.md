@@ -1,6 +1,6 @@
 # NixOS 配置仓库
 
-当前仓库处于阶段 5：`thinkbook14` 核心系统、systemd-boot 配置、通用笔记本系统服务、单用户 Home Manager 和 Fcitx5 + Rime 配置，以及 GDM 与精简 GNOME 恢复会话。当前仍未执行现场部署，Niri 和 Noctalia 尚未接入。
+当前仓库处于阶段 6：`thinkbook14` 核心系统、systemd-boot 配置、通用笔记本系统服务、单用户 Home Manager 和 Fcitx5 + Rime 配置、GDM/GNOME 恢复会话，以及 NixOS 官方 Niri 会话。当前仍未执行现场部署，Noctalia 尚未接入。
 
 ## 当前阶段边界
 
@@ -9,8 +9,9 @@
 - `modules/nixos/core/` 保存核心系统设置，`hosts/thinkbook14/` 保存主机身份和 systemd-boot 声明。
 - `modules/nixos/roles/laptop.nix` 保存跨设备通用的笔记本系统服务；主机入口只负责导入该角色。
 - `modules/nixos/desktop/gdm-gnome.nix` 保存 GDM、精简 GNOME 恢复会话和 IBus 阶段边界覆盖；Bolt、打印和指纹关闭由通用笔记本角色统一持有。
+- `modules/nixos/desktop/niri.nix` 保存 NixOS 官方 Niri 会话和 Alacritty、Fuzzel、`xwayland-satellite` 最小运行时依赖；不创建 Niri KDL、不安装 Waybar。
 - `home/core/` 保存可跨用户复用的 Home Manager 基础入口，`home/wenzhengcheng/` 保存用户状态版本和最小 Fcitx5 + Rime 配置。
-- Home Manager 负责用户级输入法配置；GNOME 核心应用集合关闭但保留 Shell、控制中心、Nautilus 和门户基础服务；当前不包含 Niri、Noctalia、自定义词库/主题/布局/快捷键或现场部署。
+- Home Manager 负责用户级输入法配置；GNOME 核心应用集合关闭但保留 Shell、控制中心、Nautilus 和门户基础服务；Niri 使用官方默认配置，当前不包含 Noctalia、自定义词库/主题/布局/快捷键或现场部署。
 
 ## 输入与锁定
 

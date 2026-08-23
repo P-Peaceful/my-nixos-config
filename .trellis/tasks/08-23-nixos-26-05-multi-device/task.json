@@ -23,7 +23,8 @@
     "08-23-thinkbook14-core-boot",
     "08-23-thinkbook14-laptop-role",
     "08-24-thinkbook14-home-fcitx5",
-    "08-24-thinkbook14-gdm-gnome"
+    "08-24-thinkbook14-gdm-gnome",
+    "08-24-thinkbook14-niri"
   ],
   "parent": null,
   "relatedFiles": [],
